@@ -109,6 +109,11 @@ async function populateColumn(columnId, url) {
         let description = item.querySelector('description')?.textContent || 'No Description';
         description = description.replace(/<\/?[^>]+(>|$)/g, ""); // Remove HTML tags
 
+        // Limit description to 400 characters
+        if (description.length > 400) {
+        description = description.substring(0, 400) + '...';
+        }
+        
         // Extract and parse the publication date, ensuring UK format
         let pubDate = item.querySelector('pubDate');
         let formattedDate = "No date available";
