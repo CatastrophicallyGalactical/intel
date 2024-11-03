@@ -9,22 +9,59 @@
 <body>
     <aside class="sidebar">
         <h1>Intelligence Dashboard</h1>
-        <form id="feedForm">
-            <input type="text" id="feedName" placeholder="Column Name" required>
-            <input type="url" id="feedUrl" placeholder="RSS Feed URL" required>
-            <button type="submit">Add Feed</button>
-        </form>
+
+        <!-- Add New Column Section -->
+        <section class="menu-section">
+            <h2>Add New Column</h2>
+            <input type="text" id="feedName" placeholder="Column Name">
+            <button type="button" id="addColumnBtn">Add Column</button>
+        </section>
+
+        <!-- Manage Existing Columns Section -->
+        <section class="menu-section">
+            <h2>Manage Existing Columns</h2>
+            <label for="columnSelect">Select Column:</label>
+            <select id="columnSelect">
+                <option value="">Select an existing column</option>
+                <!-- Existing columns will be dynamically added here -->
+            </select>
+
+            <label for="renameColumnInput">Rename Column:</label>
+            <input type="text" id="renameColumnInput" placeholder="New Column Name">
+            <button type="button" id="renameColumnBtn">Rename Column</button>
+            
+            <button type="button" id="deleteColumnBtn">Delete Column</button>
+            
+            <label for="feedUrl">Add RSS Feed URL:</label>
+            <input type="url" id="feedUrl" placeholder="RSS Feed URL">
+            <button type="button" id="addFeedBtn">Add Feed</button>
+
+            <label for="feedSelect">Delete RSS Feed:</label>
+            <select id="feedSelect">
+                <option value="">Select a feed to delete</option>
+                <!-- Feeds in selected column will be dynamically added here -->
+            </select>
+            <button type="button" id="deleteFeedBtn">Delete Feed</button>
+        </section>
+
+        <!-- Export/Import Section -->
+        <section class="menu-section">
+            <h2>Export/Import Dashboard</h2>
+            <button id="exportBtn">Export Dashboard</button>
+            <input type="file" id="importFile" accept=".csv" style="display: none;">
+            <label for="importFile" class="import-btn">Import Dashboard</label>
+        </section>
+
+        <!-- Reset Button -->
+        <button type="button" id="resetBtn" style="background-color: #d9008f; color: #fff; border: none; padding: 0.5rem; width: 100%; cursor: pointer; margin-top: 1rem;">
+            Reset Dashboard
+        </button>
     </aside>
+    
     <div class="dashboard" id="dashboard">
-        <div class="column" id="telecoms">
-            <h2>Telecommunications</h2>
-            <div class="feed-content"></div>
-        </div>
-        <div class="column" id="broadcasting">
-            <h2>Broadcasting and Media</h2>
-            <div class="feed-content"></div>
-        </div>
+        <!-- Columns will be dynamically populated here -->
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
