@@ -98,17 +98,24 @@ async function populateColumn(columnId, url) {
     const parser = new URL(originalUrl);
     const channelTitle = parser.hostname.replace('www.', '');
 
+    // Array to temporarily store articles with date for sorting
+    let articles = [];
+
     for (const item of feedData.querySelectorAll('item')) {
-        const title = item.querySelector('title').textContent || 'No Title';
-        const link = item.querySelector('link').textContent || '#';
+        const title = item.querySelector('title')?.textContent || 'No Title';
+        const link = item.querySelector('link')?.textContent || '#';
         
         // Extract and clean up the description text
         let description = item.querySelector('description')?.textContent || 'No Description';
         description = description.replace(/<\/?[^>]+(>|$)/g, ""); // Remove HTML tags
 
-        // Extract and format the publication date
+        // Extract and format the publication date in UK format
         let pubDate = item.querySelector('pubDate');
-        pubDate = pubDate ? new Date(pubDate.textContent).toLocaleDateString() : "No date available";
+        let formattedDate = "No date available";
+        if (pubDate) {
+            const dateObj = new Date(pubDate.textContent);
+            formattedDate = new Intl.DateTimeFormat('en-GB').format(dateObj);
+        }
 
         // Thumbnail placeholder URL
         const placeholderImageUrl = 'https://via.placeholder.com/50';
@@ -129,46 +136,63 @@ async function populateColumn(columnId, url) {
             imageUrl = await fetchOpenGraphImage(link) || placeholderImageUrl;
         }
 
+        // Store article information in an object for sorting
+        articles.push({
+            channelTitle,
+            title,
+            link,
+            description,
+            formattedDate,
+            imageUrl,
+            pubDate: pubDate ? new Date(pubDate.textContent) : new Date(0) // Use epoch date for sorting if no date
+        });
+    }
+
+    // Sort articles by date in descending order (latest first)
+    articles.sort((a, b) => b.pubDate - a.pubDate);
+
+    // Append articles to the feed content in sorted order
+    articles.forEach(article => {
         // Create the article container
         const articleContainer = document.createElement('div');
         articleContainer.classList.add('article-container');
 
         // Display the domain/channel title
         const channelElement = document.createElement('div');
-        channelElement.textContent = channelTitle;
+        channelElement.textContent = article.channelTitle;
         channelElement.classList.add('channel-title');
         articleContainer.appendChild(channelElement);
 
         // Add thumbnail or placeholder
         const img = document.createElement('img');
-        img.src = imageUrl;
-        img.alt = title;
+        img.src = article.imageUrl;
+        img.alt = article.title;
         img.classList.add('thumbnail');
         articleContainer.appendChild(img);
 
         // Create the article link for the title
-        const article = document.createElement('a');
-        article.href = link;
-        article.target = '_blank';
-        article.textContent = title;
-        article.classList.add('article');
-        articleContainer.appendChild(article);
+        const articleLink = document.createElement('a');
+        articleLink.href = article.link;
+        articleLink.target = '_blank';
+        articleLink.textContent = article.title;
+        articleLink.classList.add('article');
+        articleContainer.appendChild(articleLink);
 
         // Add the description
         const descriptionElement = document.createElement('p');
-        descriptionElement.textContent = description;
+        descriptionElement.textContent = article.description;
         descriptionElement.classList.add('description');
         articleContainer.appendChild(descriptionElement);
 
-        // Add the publication date
+        // Add the publication date in UK format
         const dateElement = document.createElement('div');
-        dateElement.textContent = pubDate;
+        dateElement.textContent = article.formattedDate;
         dateElement.classList.add('article-date');
         articleContainer.appendChild(dateElement);
 
         // Append the article container to the column's feed content
         feedContent.appendChild(articleContainer);
-    }
+    });
 }
 
 // Function to add a new column without an RSS feed
