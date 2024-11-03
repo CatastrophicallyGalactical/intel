@@ -1,3 +1,4 @@
+const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 let columns = JSON.parse(localStorage.getItem('dashboardColumns')) || {};
 
 // Function to load the default dashboard from `default.csv` if no saved data is in `localStorage`
@@ -27,8 +28,9 @@ async function loadDefaultDashboard() {
                 }
 
                 // Add feed to the column
-                columns[columnName].push(cleanFeedUrl);
-                populateColumn(columnName.toLowerCase().replace(/\s+/g, '-'), cleanFeedUrl);
+                const fullFeedUrl = proxyUrl + cleanFeedUrl;
+                columns[columnName].push(fullFeedUrl);
+                populateColumn(columnName.toLowerCase().replace(/\s+/g, '-'), fullFeedUrl);
             }
         });
 
@@ -72,59 +74,53 @@ async function populateColumn(columnId, url) {
     const feedData = await fetchFeed(url);
     if (!feedData) return;
 
+    // Extract the channel title or domain from the feed URL
+    const parser = new URL(url);
+    const channelTitle = parser.hostname.replace('www.', '');
+
     feedData.querySelectorAll('item').forEach((item) => {
-        const title = item.querySelector('title').textContent;
-        const link = item.querySelector('link').textContent;
+        const title = item.querySelector('title').textContent || 'No Title';
+        const link = item.querySelector('link').textContent || '#';
+        
+        // Extract and clean up the description text
+        let description = item.querySelector('description')?.textContent || 'No Description';
+        description = description.replace(/<\/?[^>]+(>|$)/g, ""); // Remove HTML tags
 
         // Extract and format the publication date
         let pubDate = item.querySelector('pubDate');
         pubDate = pubDate ? new Date(pubDate.textContent).toLocaleDateString() : "No date available";
 
-        let imageUrl = null;
-        const enclosure = item.querySelector('enclosure');
-        const mediaContent = item.querySelector('media\\:content, content');
-
-        if (enclosure && enclosure.getAttribute('type')?.startsWith('image')) {
-            imageUrl = enclosure.getAttribute('url');
-        } else if (mediaContent && mediaContent.getAttribute('url')) {
-            imageUrl = mediaContent.getAttribute('url');
-        }
-
         // Create the article container
         const articleContainer = document.createElement('div');
         articleContainer.classList.add('article-container');
 
-        // Add thumbnail if available
-        if (imageUrl) {
-            const img = document.createElement('img');
-            img.src = imageUrl;
-            img.alt = title;
-            img.classList.add('thumbnail');
-            articleContainer.appendChild(img);
-        }
+        // Display the domain/channel title
+        const channelElement = document.createElement('div');
+        channelElement.textContent = channelTitle;
+        channelElement.classList.add('channel-title');
+        articleContainer.appendChild(channelElement);
 
-        // Create the wrapper for the title and date
-        const textWrapper = document.createElement('div');
-        textWrapper.classList.add('text-wrapper');
-
-        // Create the article link
+        // Create the article link for the title
         const article = document.createElement('a');
         article.href = link;
         article.target = '_blank';
         article.textContent = title;
         article.classList.add('article');
+        articleContainer.appendChild(article);
 
-        // Create the date element in smaller font
+        // Add the description
+        const descriptionElement = document.createElement('p');
+        descriptionElement.textContent = description;
+        descriptionElement.classList.add('description');
+        articleContainer.appendChild(descriptionElement);
+
+        // Add the publication date
         const dateElement = document.createElement('div');
         dateElement.textContent = pubDate;
         dateElement.classList.add('article-date');
+        articleContainer.appendChild(dateElement);
 
-        // Append title and date to the text wrapper
-        textWrapper.appendChild(article);
-        textWrapper.appendChild(dateElement);
-
-        // Append the text wrapper to the article container
-        articleContainer.appendChild(textWrapper);
+        // Append the article container to the column's feed content
         feedContent.appendChild(articleContainer);
     });
 }
@@ -188,10 +184,11 @@ document.getElementById('addFeedBtn').addEventListener('click', () => {
     const feedUrl = document.getElementById('feedUrl').value.trim();
 
     if (columnSelect && feedUrl) {
-        columns[columnSelect].push(feedUrl);
+        const fullUrl = proxyUrl + feedUrl;
+        columns[columnSelect].push(fullUrl);
         localStorage.setItem('dashboardColumns', JSON.stringify(columns));
 
-        populateColumn(columnSelect.toLowerCase().replace(/\s+/g, '-'), feedUrl);
+        populateColumn(columnSelect.toLowerCase().replace(/\s+/g, '-'), fullUrl);
         updateFeedSelect(columnSelect);
         document.getElementById('feedUrl').value = ''; // Clear the feed URL field
     }
@@ -203,10 +200,11 @@ function updateFeedSelect(columnName) {
     feedSelect.innerHTML = ''; // Clear previous options
 
     if (columns[columnName]) {
-        columns[columnName].forEach(feedUrl => {
+        columns[columnName].forEach(fullUrl => {
+            const cleanUrl = fullUrl.startsWith(proxyUrl) ? fullUrl.replace(proxyUrl, '') : fullUrl;
             const option = document.createElement('option');
-            option.value = feedUrl;
-            option.textContent = feedUrl;
+            option.value = fullUrl;
+            option.textContent = cleanUrl;
             feedSelect.appendChild(option);
         });
     }
@@ -260,7 +258,8 @@ document.getElementById('exportBtn').addEventListener('click', () => {
 
     for (const columnName in columns) {
         columns[columnName].forEach(feedUrl => {
-            rows.push([columnName, feedUrl]);
+            const cleanUrl = feedUrl.startsWith(proxyUrl) ? feedUrl.replace(proxyUrl, '') : feedUrl;
+            rows.push([columnName, cleanUrl]);
         });
     }
 
@@ -337,14 +336,17 @@ document.getElementById('importFile').addEventListener('change', (event) => {
             const [columnName, feedUrl] = row.split(',');
 
             if (columnName && feedUrl) {
+                const cleanFeedUrl = feedUrl.trim();
+
                 if (!columns[columnName]) {
                     columns[columnName] = [];
                     addColumnToDashboard(columnName, columns[columnName]);
                     addOptionToColumnSelect(columnName);
                 }
 
-                columns[columnName].push(feedUrl);
-                populateColumn(columnName.toLowerCase().replace(/\s+/g, '-'), feedUrl);
+                const fullFeedUrl = proxyUrl + cleanFeedUrl;
+                columns[columnName].push(fullFeedUrl);
+                populateColumn(columnName.toLowerCase().replace(/\s+/g, '-'), fullFeedUrl);
             }
         });
 
