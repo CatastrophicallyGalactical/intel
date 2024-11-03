@@ -39,18 +39,14 @@ body {
     margin-bottom: 0.5rem;
 }
 
-#feedForm input, #feedForm button, #feedForm select,
-.menu-section input, .menu-section button, .menu-section select {
+/* Input fields */
+.menu-section input[type="text"], .menu-section input[type="url"], #renameColumnInput {
+    background-color: #e0e0e0;
     width: 100%;
     margin: 0.3rem 0;
     padding: 0.5rem;
     border: none;
     border-radius: 5px;
-}
-
-/* Input fields */
-.menu-section input[type="text"], .menu-section input[type="url"], #renameColumnInput {
-    background-color: #e0e0e0;
 }
 
 /* Buttons */
@@ -60,45 +56,26 @@ body {
     cursor: pointer;
     transition: background 0.3s;
     border: none;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 5px;
 }
 
 .menu-section button:hover {
     background-color: #b0006d;
 }
 
-/* Import button styled as a label */
-.import-btn {
-    background-color: #d9008f;
-    color: #fff;
-    padding: 0.5rem;
-    border-radius: 5px;
-    cursor: pointer;
-    display: inline-block;
-    text-align: center;
-    margin-top: 0.5rem;
-}
-
-.import-btn:hover {
-    background-color: #b0006d;
-}
-
-/* Scroll container for horizontal scrolling */
+/* Dashboard layout */
 .scroll-container {
     overflow-x: auto;           /* Enable horizontal scrolling */
-    width: calc(100% - 250px);  /* Full width of dashboard area minus sidebar */
-    height: 100%;               /* Match viewport height */
-    display: flex;
+    flex: 1;
 }
 
-/* Dashboard layout */
 .dashboard {
-    display: grid;
-    grid-auto-flow: column;                 /* Align columns horizontally */
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    display: flex;
     gap: 1rem;
     padding: 2rem;
-    overflow-y: auto;
-    min-width: max-content;                 /* Prevent columns from collapsing */
 }
 
 /* Column styling */
@@ -107,7 +84,8 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 1rem;
-    width: 300px;                           /* Fixed width for each column */
+    width: 300px;
+    flex: 0 0 auto; /* Prevent columns from shrinking */
 }
 
 .column h2 {
@@ -120,13 +98,14 @@ body {
 /* Article container (card style) */
 .article-container {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     background-color: #fafafa;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
     padding: 0.5rem;
     transition: transform 0.3s ease;
+    flex-direction: column;
 }
 
 .article-container:hover {
@@ -134,19 +113,43 @@ body {
 }
 
 .thumbnail {
-    width: 50px;
-    height: 50px;
+    width: 100%;
+    height: auto;
+    max-height: 150px;
     object-fit: cover;
     border-radius: 5px;
-    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.text-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.channel-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #2b065a;
 }
 
 .article {
     text-decoration: none;
     color: #333;
     font-size: 1rem;
+    font-weight: bold;
 }
 
 .article:hover {
-    color: #2b065a;
+    color: #d9008f;
+}
+
+.description {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.article-date {
+    font-size: 0.8rem;
+    color: #888;
 }
