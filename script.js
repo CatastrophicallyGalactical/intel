@@ -90,6 +90,17 @@ async function populateColumn(columnId, url) {
         let pubDate = item.querySelector('pubDate');
         pubDate = pubDate ? new Date(pubDate.textContent).toLocaleDateString() : "No date available";
 
+        // Extract thumbnail image URL if available
+        let imageUrl = null;
+        const enclosure = item.querySelector('enclosure');
+        const mediaContent = item.querySelector('media\\:content, content');
+        
+        if (enclosure && enclosure.getAttribute('type')?.startsWith('image')) {
+            imageUrl = enclosure.getAttribute('url');
+        } else if (mediaContent && mediaContent.getAttribute('url')) {
+            imageUrl = mediaContent.getAttribute('url');
+        }
+
         // Create the article container
         const articleContainer = document.createElement('div');
         articleContainer.classList.add('article-container');
@@ -99,6 +110,15 @@ async function populateColumn(columnId, url) {
         channelElement.textContent = channelTitle;
         channelElement.classList.add('channel-title');
         articleContainer.appendChild(channelElement);
+
+        // Add thumbnail if available
+        if (imageUrl) {
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = title;
+            img.classList.add('thumbnail');
+            articleContainer.appendChild(img);
+        }
 
         // Create the article link for the title
         const article = document.createElement('a');
