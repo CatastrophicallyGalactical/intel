@@ -1,51 +1,75 @@
 Column Name,RSS Feed URL
 Telecoms,https://www.theguardian.com/business/telecoms/rss
-Telecoms,https://www.gsma.com/newsroom/category/press-release/feed/
-Telecommunications Regulation,https://www.totaltele.com/rss
-Telecommunications Regulation,https://www.telecoms.com/feed/
-Broadcasting and Media Regulation,https://www.broadbandtvnews.com/feed/
-Broadcasting and Media Regulation,https://www.theguardian.com/media/rss
+Telecoms,https://www.gsma.com/newsroom/feed/
+Telecoms,https://www.rcrwireless.com/feed
+Telecoms,https://www.ft.com/telecoms?format=rss
+Telecoms,https://www.telecomstechnews.com/feed/
+Telecoms,https://www.fiercetelecom.com/rss/xml
+Telecoms,https://news.itu.int/feed/
+Telecoms,https://spectrum.ieee.org/rss/
+Telecoms,https://blog.telegeography.com/rss.xml
+Telecommunications Regulation,https://www.totaltele.com/feed
+Telecommunications Regulation,https://www.ofcom.org.uk/about-ofcom/latest/media/rss
+Telecommunications Regulation,https://www.policytracker.com/feed/
+Telecommunications Regulation,https://www.lightreading.com/rss.xml
+Broadcast,https://advanced-television.com/feed/
+Broadcast,https://www.theguardian.com/media/rss
+Broadcast,https://www.digitaltveurope.com/feed/
 Consumer Protection,https://www.which.co.uk/news/feed
-Consumer Protection,https://www.tradingstandards.uk/newsroom/latest-news/rss
-Consumer Protection,https://www.consumerreports.org/rss/feed/
-Spectrum Management,https://www.itu.int/en/myitu/News/rss
-Spectrum Management,https://www.totaltele.com/rss
-Broadband and Internet,https://www.ispreview.co.uk/index.xml
+Consumer Protection,https://www.citizen.org/feed/
+Consumer Protection,https://www.gov.uk/government/organisations/competition-and-markets-authority.atom
 Broadband and Internet,https://www.broadbandtvnews.com/feed/
-Broadband and Internet,https://www.bbc.co.uk/news/technology/rss.xml
-Mobile Industry and 5G,https://www.mobileworldlive.com/latest-stories/feed/
-Mobile Industry and 5G,https://www.telecoms.com/feed/
-Mobile Industry and 5G,https://www.gsma.com/newsroom/feed/
-Digital Infrastructure and Networks,https://www.lightreading.com/rss_simple.asp
+Mobile Industry and 5G,https://www.mobileworldlive.com/feed/
 Digital Infrastructure and Networks,https://www.telecomstechnews.com/news/feed/
-Digital Infrastructure and Networks,https://www.computerweekly.com/rss/Networking-and-communications.xml
-Data Privacy and Consumer Rights,https://www.iapp.org/rss.xml
-Data Privacy and Consumer Rights,https://ico.org.uk/rss/news
+Digital Infrastructure and Networks,https://www.computerweekly.com/rss/All-Computer-Weekly-content.xml
+Data Privacy and Consumer Rights,https://iapp.org/rss/
+Data Privacy and Consumer Rights,https://ico.org.uk/global/rss-feeds/news-and-blogs/
+Data Privacy and Consumer Rights,https://ico.org.uk/global/rss-feeds/decision-notices/
+Data Privacy and Consumer Rights,https://ico.org.uk/global/rss-feeds/enforcement/
+Data Privacy and Consumer Rights,https://www.edps.europa.eu/feed/news_en
 Data Privacy and Consumer Rights,https://techcrunch.com/tag/privacy/feed/
-Cybersecurity and Digital Safety,https://www.darkreading.com/rss_simple.asp
+Cybersecurity and Digital Safety,https://www.darkreading.com/rss.xml
 Cybersecurity and Digital Safety,https://feeds.feedburner.com/TheHackersNews
 Cybersecurity and Digital Safety,https://www.cyberscoop.com/feed/
-Media and Broadcasting Standards,https://www.ofcom.org.uk/broadcasting/broadcast-codes/rss
-Media and Broadcasting Standards,https://www.broadcastnow.co.uk/news/rss
-Media and Broadcasting Standards,https://advanced-television.com/feed/
 Digital Policy and Government Affairs,https://www.gov.uk/government/organisations/department-for-digital-culture-media-sport.atom
 Digital Policy and Government Affairs,https://www.brookings.edu/topic/technology/feed/
-Digital Policy and Government Affairs,https://www.politico.eu/rss-policy/feed/
+Digital Policy and Government Affairs,https://www.politico.eu/feed/
 Technology and Innovation,https://www.technologyreview.com/feed/
+Technology and Innovation,https://www.theguardian.com/uk/technology/rss
 Technology and Innovation,https://www.theverge.com/rss/index.xml
+Technology and Innovation,https://singularityhub.com/feed/
+Technology and Innovation,https://feeds.bbci.co.uk/news/technology/rss.xml
+Technology and Innovation,https://venturebeat.com/category/ai/feed/
+Technology and Innovation,https://www.wired.com/feed/
+Technology and Innovation,https://feeds.feedburner.com/TechCrunch/
+Technology and Innovation,https://www.ft.com/technology-sector?format=rss
+Technology and Innovation,https://www.microsoft.com/en-us/research/feed/
+Technology and Innovation,https://www.forbes.com/innovation/feed/
+Technology and Innovation,https://www.newscientist.com/subject/technology/feed/
+Technology and Innovation,https://spectrum.ieee.org/customfeeds/feed/all-topics/rss
+Technology and Innovation,https://feeds.arstechnica.com/arstechnica/index/
+Technology and Innovation,https://gizmodo.com/rss
+Technology and Innovation,https://www.zdnet.com/news/rss.xml
 Technology and Innovation,https://www.engadget.com/rss.xml
-Internet Safety and Content Regulation,https://www.ofcom.org.uk/complaints/content-safety/rss
-Internet Safety and Content Regulation,https://www.internetmatters.org/feed/
-Internet Safety and Content Regulation,https://www.saferinternet.org.uk/rss/news
-OTT (Over-the-Top) and Streaming Services,https://www.streamingmedia.com/rss.aspx
-OTT (Over-the-Top) and Streaming Services,https://www.cordcuttersnews.com/feed/
-OTT (Over-the-Top) and Streaming Services,https://advanced-television.com/feed/
-Artificial Intelligence and Ethics,https://ai.googleblog.com/feeds/posts/default
+Internet Safety and Content Regulation,https://cyberbullying.org/feed
+Internet Safety and Content Regulation,https://www.eff.org/rss/updates.xml
+Internet Safety and Content Regulation,https://www.tspa.org/feed/
+Internet Safety and Content Regulation,https://www.internetsociety.org/feed/
+Internet Safety and Content Regulation,https://www.gov.uk/government/organisations/uk-council-for-internet-safety.atom
+Internet Safety and Content Regulation,https://www.saferinternet.org.uk/rss
+Artificial Intelligence and Ethics,https://www.alignmentforum.org/feed.xml
+Artificial Intelligence and Ethics,https://aiethicslab.com/feed/
+Artificial Intelligence and Ethics,https://datasociety.net/feed/
+Artificial Intelligence and Ethics,https://aipolicyexchange.org/feed/
+Artificial Intelligence and Ethics,https://thegradient.pub/rss/
+Artificial Intelligence and Ethics,https://ainowinstitute.org/feed
+Artificial Intelligence and Ethics,https://futureoflife.org/feed/
+Artificial Intelligence and Ethics,https://partnershiponai.org/feed/
+Artificial Intelligence and Ethics,https://algorithmwatch.org/en/feed/
 Artificial Intelligence and Ethics,https://www.technologyreview.com/tag/artificial-intelligence/feed/
 Artificial Intelligence and Ethics,https://spectrum.ieee.org/rss/AI
 Market Competition and Mergers,https://www.gov.uk/cma-cases.atom
 Market Competition and Mergers,https://www.competitionpolicyinternational.com/feed/
-Market Competition and Mergers,https://www.ft.com/companies/technology?format=rss
 Environmental Sustainability in Telecoms,https://telecomstechnews.com/news/sustainability/feed/
 Environmental Sustainability in Telecoms,https://www.greentechmedia.com/rss
 Environmental Sustainability in Telecoms,https://www.sustainablebusiness.com/feed/
