@@ -50,7 +50,7 @@ body {
 }
 
 /* Buttons */
-.menu-section button {
+.menu-section button, #exportImportSection .dashboard-button {
     background-color: #d9008f; /* Ofcom pink */
     color: #fff;
     cursor: pointer;
@@ -62,8 +62,16 @@ body {
     border-radius: 5px;
 }
 
-.menu-section button:hover {
+.menu-section button:hover, #exportImportSection .dashboard-button:hover {
     background-color: #b0006d;
+}
+
+#exportImportSection .dashboard-button {
+    display: block;
+    width: 100%;
+    font-size: 14px;
+    margin: 5px 0;
+    text-align: center;
 }
 
 /* Dashboard layout */
