@@ -17,34 +17,68 @@ body {
     width: 250px;
     background-color: #2b065a; /* Ofcom purple */
     color: #fff;
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem;
+    overflow-y: auto;
 }
 
 .sidebar h1 {
     font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
-#feedForm input, #feedForm button {
+/* Section titles and layout */
+.menu-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #4b0b8a; /* Darker purple divider */
+}
+
+.menu-section h2 {
+    font-size: 1.1rem;
+    color: #d9b3ff;
+    margin-bottom: 0.5rem;
+}
+
+#feedForm input, #feedForm button, #feedForm select,
+.menu-section input, .menu-section button, .menu-section select {
     width: 100%;
-    margin: 0.5rem 0;
+    margin: 0.3rem 0;
     padding: 0.5rem;
     border: none;
     border-radius: 5px;
 }
 
-#feedForm input {
+/* Input fields */
+.menu-section input[type="text"], .menu-section input[type="url"], #renameColumnInput {
     background-color: #e0e0e0;
 }
 
-#feedForm button {
+/* Buttons */
+.menu-section button {
     background-color: #d9008f; /* Ofcom pink */
     color: #fff;
     cursor: pointer;
     transition: background 0.3s;
+    border: none;
 }
 
-#feedForm button:hover {
+.menu-section button:hover {
+    background-color: #b0006d;
+}
+
+/* Import button styled as a label */
+.import-btn {
+    background-color: #d9008f;
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.import-btn:hover {
     background-color: #b0006d;
 }
 
@@ -76,33 +110,34 @@ body {
 /* Article container (card style) */
 .article-container {
     display: flex;
-    align-items: center;
-    background-color: #fafafa;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    transition: transform 0.3s ease;
-}
-
-.article-container:hover {
-    transform: translateY(-3px);
+    align-items: flex-start;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .thumbnail {
     width: 50px;
     height: 50px;
     object-fit: cover;
-    border-radius: 5px;
-    margin-right: 1rem;
+    margin-right: 10px;
+}
+
+.text-wrapper {
+    display: flex;
+    flex-direction: column;
 }
 
 .article {
-    text-decoration: none;
+    font-size: 1em;
     color: #333;
-    font-size: 0.9rem;
+    text-decoration: none;
+    margin-bottom: 4px;
 }
 
-.article:hover {
-    color: #2b065a;
+.article-date {
+    font-size: 0.8em;
+    color: #d88b8b;
 }
