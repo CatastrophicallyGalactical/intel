@@ -93,76 +93,64 @@ async function populateColumn(columnId, url) {
     const feedData = await fetchFeed(url);
     if (!feedData) return;
 
-    // Extract the original feed URL's domain as the channel title
-    const originalUrl = url.replace(proxyUrl, ''); // Remove proxy prefix
-    const parser = new URL(originalUrl);
-    const channelTitle = parser.hostname.replace('www.', '');
+    // Collect all articles in an array with parsed dates
+    const articles = [];
 
-    for (const item of feedData.querySelectorAll('item')) {
-        const title = item.querySelector('title').textContent || 'No Title';
-        const link = item.querySelector('link').textContent || '#';
+    feedData.querySelectorAll('item').forEach((item) => {
+        const title = item.querySelector('title')?.textContent || 'No Title';
+        const link = item.querySelector('link')?.textContent || '#';
         
         // Extract and clean up the description text
         let description = item.querySelector('description')?.textContent || 'No Description';
         description = description.replace(/<\/?[^>]+(>|$)/g, ""); // Remove HTML tags
 
-        // Extract and format the publication date
+        // Extract and parse the publication date
         let pubDate = item.querySelector('pubDate');
-        pubDate = pubDate ? new Date(pubDate.textContent).toLocaleDateString() : "No date available";
+        const parsedDate = pubDate ? new Date(pubDate.textContent) : null;
 
-        // Thumbnail placeholder URL
-        const placeholderImageUrl = 'https://via.placeholder.com/50';
+        // Create an article object
+        articles.push({
+            title,
+            link,
+            description,
+            pubDate: parsedDate,
+            dateDisplay: parsedDate ? parsedDate.toLocaleDateString() : "No date available"
+        });
+    });
 
-        // Extract thumbnail image URL if available
-        let imageUrl = null;
-        const enclosure = item.querySelector('enclosure');
-        const mediaContent = item.querySelector('media\\:content, content');
-        
-        if (enclosure && enclosure.getAttribute('type')?.startsWith('image')) {
-            imageUrl = enclosure.getAttribute('url');
-        } else if (mediaContent && mediaContent.getAttribute('url')) {
-            imageUrl = mediaContent.getAttribute('url');
-        }
+    // Sort articles by date in descending order
+    articles.sort((a, b) => (b.pubDate - a.pubDate));
 
-        // If no image was found in the RSS, fetch OpenGraph image as a fallback
-        if (!imageUrl) {
-            imageUrl = await fetchOpenGraphImage(link) || placeholderImageUrl;
-        }
-
-        // Create the article container
+    // Render the sorted articles
+    for (const article of articles) {
         const articleContainer = document.createElement('div');
         articleContainer.classList.add('article-container');
 
         // Display the domain/channel title
+        const parser = new URL(url);
+        const channelTitle = parser.hostname.replace('www.', '');
         const channelElement = document.createElement('div');
         channelElement.textContent = channelTitle;
         channelElement.classList.add('channel-title');
         articleContainer.appendChild(channelElement);
 
-        // Add thumbnail or placeholder
-        const img = document.createElement('img');
-        img.src = imageUrl;
-        img.alt = title;
-        img.classList.add('thumbnail');
-        articleContainer.appendChild(img);
-
         // Create the article link for the title
-        const article = document.createElement('a');
-        article.href = link;
-        article.target = '_blank';
-        article.textContent = title;
-        article.classList.add('article');
-        articleContainer.appendChild(article);
+        const articleLink = document.createElement('a');
+        articleLink.href = article.link;
+        articleLink.target = '_blank';
+        articleLink.textContent = article.title;
+        articleLink.classList.add('article');
+        articleContainer.appendChild(articleLink);
 
         // Add the description
         const descriptionElement = document.createElement('p');
-        descriptionElement.textContent = description;
+        descriptionElement.textContent = article.description;
         descriptionElement.classList.add('description');
         articleContainer.appendChild(descriptionElement);
 
         // Add the publication date
         const dateElement = document.createElement('div');
-        dateElement.textContent = pubDate;
+        dateElement.textContent = article.dateDisplay;
         dateElement.classList.add('article-date');
         articleContainer.appendChild(dateElement);
 
