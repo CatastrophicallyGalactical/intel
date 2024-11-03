@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ofcom Intelligence Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <h1>Intelligence Dashboard</h1>
+        <form id="feedForm">
+            <input type="text" id="feedName" placeholder="Column Name" required>
+            <input type="url" id="feedUrl" placeholder="RSS Feed URL" required>
+            <button type="submit">Add Feed</button>
+        </form>
+    </aside>
+    <div class="dashboard" id="dashboard">
+        <div class="column" id="telecoms">
+            <h2>Telecommunications</h2>
+            <div class="feed-content"></div>
+        </div>
+        <div class="column" id="broadcasting">
+            <h2>Broadcasting and Media</h2>
+            <div class="feed-content"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
