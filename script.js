@@ -109,12 +109,16 @@ async function populateColumn(columnId, url) {
         let description = item.querySelector('description')?.textContent || 'No Description';
         description = description.replace(/<\/?[^>]+(>|$)/g, ""); // Remove HTML tags
 
-        // Extract and format the publication date in UK format
+        // Extract and parse the publication date, ensuring UK format
         let pubDate = item.querySelector('pubDate');
         let formattedDate = "No date available";
+        let dateObj = new Date(0); // Default to epoch date for missing dates
+
         if (pubDate) {
-            const dateObj = new Date(pubDate.textContent);
-            formattedDate = new Intl.DateTimeFormat('en-GB').format(dateObj);
+            dateObj = new Date(pubDate.textContent);
+            formattedDate = new Intl.DateTimeFormat('en-GB', {
+                day: '2-digit', month: '2-digit', year: 'numeric'
+            }).format(dateObj);
         }
 
         // Thumbnail placeholder URL
@@ -144,7 +148,7 @@ async function populateColumn(columnId, url) {
             description,
             formattedDate,
             imageUrl,
-            pubDate: pubDate ? new Date(pubDate.textContent) : new Date(0) // Use epoch date for sorting if no date
+            pubDate: dateObj // Use the actual date object for accurate sorting
         });
     }
 
