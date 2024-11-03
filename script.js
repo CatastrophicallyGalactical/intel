@@ -86,77 +86,75 @@ async function fetchFeed(url) {
     }
 }
 
-async function populateColumn(columnId, urls) {
+async function populateColumn(columnId, url) {
     const feedContent = document.getElementById(columnId).querySelector('.feed-content');
     feedContent.innerHTML = ''; // Clear previous content before repopulating
 
-    // Array to store all articles across feeds
+    const feedData = await fetchFeed(url);
+    if (!feedData) return;
+
+    // Extract the original feed URL's domain as the channel title
+    const originalUrl = url.replace(proxyUrl, ''); // Remove proxy prefix
+    const parser = new URL(originalUrl);
+    const channelTitle = parser.hostname.replace('www.', '');
+
+    // Array to temporarily store articles with date for sorting
     let articles = [];
 
-    // Loop through each feed URL and fetch articles
-    for (const url of urls) {
-        const feedData = await fetchFeed(url);
-        if (!feedData) continue;
+    for (const item of feedData.querySelectorAll('item')) {
+        const title = item.querySelector('title')?.textContent || 'No Title';
+        const link = item.querySelector('link')?.textContent || '#';
+        
+        // Extract and clean up the description text
+        let description = item.querySelector('description')?.textContent || 'No Description';
+        description = description.replace(/<\/?[^>]+(>|$)/g, ""); // Remove HTML tags
 
-        // Extract the original feed URL's domain as the channel title
-        const originalUrl = url.replace(proxyUrl, ''); // Remove proxy prefix
-        const parser = new URL(originalUrl);
-        const channelTitle = parser.hostname.replace('www.', '');
-
-        // Extract articles from the feed
-        for (const item of feedData.querySelectorAll('item')) {
-            const title = item.querySelector('title')?.textContent || 'No Title';
-            const link = item.querySelector('link')?.textContent || '#';
-            
-            // Extract and clean up the description text
-            let description = item.querySelector('description')?.textContent || 'No Description';
-            description = description.replace(/<\/?[^>]+(>|$)/g, ""); // Remove HTML tags
-            
-            // Limit description to 400 characters
-            if (description.length > 400) {
-                description = description.substring(0, 400) + '...';
-            }
-
-            // Extract and format the publication date in UK format
-            let pubDate = item.querySelector('pubDate');
-            let formattedDate = "No date available";
-            let pubDateObj = new Date(0); // Default to epoch if no date
-
-            if (pubDate) {
-                pubDateObj = new Date(pubDate.textContent);
-                formattedDate = new Intl.DateTimeFormat('en-GB').format(pubDateObj);
-            }
-
-            // Thumbnail placeholder URL
-            const placeholderImageUrl = 'https://via.placeholder.com/50';
-
-            // Extract thumbnail image URL if available
-            let imageUrl = null;
-            const enclosure = item.querySelector('enclosure');
-            const mediaContent = item.querySelector('media\\:content, content');
-            
-            if (enclosure && enclosure.getAttribute('type')?.startsWith('image')) {
-                imageUrl = enclosure.getAttribute('url');
-            } else if (mediaContent && mediaContent.getAttribute('url')) {
-                imageUrl = mediaContent.getAttribute('url');
-            }
-
-            // If no image was found in the RSS, fetch OpenGraph image as a fallback
-            if (!imageUrl) {
-                imageUrl = await fetchOpenGraphImage(link) || placeholderImageUrl;
-            }
-
-            // Add article information to the array
-            articles.push({
-                channelTitle,
-                title,
-                link,
-                description,
-                formattedDate,
-                imageUrl,
-                pubDate: pubDateObj // Use date object for sorting
-            });
+        // Limit description to 400 characters
+        if (description.length > 400) {
+        description = description.substring(0, 400) + '...';
         }
+        
+        // Extract and parse the publication date, ensuring UK format
+        let pubDate = item.querySelector('pubDate');
+        let formattedDate = "No date available";
+        let dateObj = new Date(0); // Default to epoch date for missing dates
+
+        if (pubDate) {
+            dateObj = new Date(pubDate.textContent);
+            formattedDate = new Intl.DateTimeFormat('en-GB', {
+                day: '2-digit', month: '2-digit', year: 'numeric'
+            }).format(dateObj);
+        }
+
+        // Thumbnail placeholder URL
+        const placeholderImageUrl = 'https://via.placeholder.com/50';
+
+        // Extract thumbnail image URL if available
+        let imageUrl = null;
+        const enclosure = item.querySelector('enclosure');
+        const mediaContent = item.querySelector('media\\:content, content');
+        
+        if (enclosure && enclosure.getAttribute('type')?.startsWith('image')) {
+            imageUrl = enclosure.getAttribute('url');
+        } else if (mediaContent && mediaContent.getAttribute('url')) {
+            imageUrl = mediaContent.getAttribute('url');
+        }
+
+        // If no image was found in the RSS, fetch OpenGraph image as a fallback
+        if (!imageUrl) {
+            imageUrl = await fetchOpenGraphImage(link) || placeholderImageUrl;
+        }
+
+        // Store article information in an object for sorting
+        articles.push({
+            channelTitle,
+            title,
+            link,
+            description,
+            formattedDate,
+            imageUrl,
+            pubDate: dateObj // Use the actual date object for accurate sorting
+        });
     }
 
     // Sort articles by date in descending order (latest first)
