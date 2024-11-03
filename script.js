@@ -1,4 +1,4 @@
-const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+const proxyUrl = 'https://intel-opal.vercel.app/api/cors?url=';
 let columns = JSON.parse(localStorage.getItem('dashboardColumns')) || {};
 
 // Function to load the default dashboard from `default.csv` if no saved data is in `localStorage`
