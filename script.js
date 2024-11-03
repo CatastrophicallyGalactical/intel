@@ -1,4 +1,3 @@
-const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 let columns = JSON.parse(localStorage.getItem('dashboardColumns')) || {};
 
 // Function to load the default dashboard from `default.csv` if no saved data is in `localStorage`
@@ -28,9 +27,8 @@ async function loadDefaultDashboard() {
                 }
 
                 // Add feed to the column
-                const fullFeedUrl = proxyUrl + cleanFeedUrl;
-                columns[columnName].push(fullFeedUrl);
-                populateColumn(columnName.toLowerCase().replace(/\s+/g, '-'), fullFeedUrl);
+                columns[columnName].push(cleanFeedUrl);
+                populateColumn(columnName.toLowerCase().replace(/\s+/g, '-'), cleanFeedUrl);
             }
         });
 
@@ -190,11 +188,10 @@ document.getElementById('addFeedBtn').addEventListener('click', () => {
     const feedUrl = document.getElementById('feedUrl').value.trim();
 
     if (columnSelect && feedUrl) {
-        const fullUrl = proxyUrl + feedUrl;
-        columns[columnSelect].push(fullUrl);
+        columns[columnSelect].push(feedUrl);
         localStorage.setItem('dashboardColumns', JSON.stringify(columns));
 
-        populateColumn(columnSelect.toLowerCase().replace(/\s+/g, '-'), fullUrl);
+        populateColumn(columnSelect.toLowerCase().replace(/\s+/g, '-'), feedUrl);
         updateFeedSelect(columnSelect);
         document.getElementById('feedUrl').value = ''; // Clear the feed URL field
     }
@@ -206,11 +203,10 @@ function updateFeedSelect(columnName) {
     feedSelect.innerHTML = ''; // Clear previous options
 
     if (columns[columnName]) {
-        columns[columnName].forEach(fullUrl => {
-            const cleanUrl = fullUrl.startsWith(proxyUrl) ? fullUrl.replace(proxyUrl, '') : fullUrl;
+        columns[columnName].forEach(feedUrl => {
             const option = document.createElement('option');
-            option.value = fullUrl;
-            option.textContent = cleanUrl;
+            option.value = feedUrl;
+            option.textContent = feedUrl;
             feedSelect.appendChild(option);
         });
     }
@@ -264,8 +260,7 @@ document.getElementById('exportBtn').addEventListener('click', () => {
 
     for (const columnName in columns) {
         columns[columnName].forEach(feedUrl => {
-            const cleanUrl = feedUrl.startsWith(proxyUrl) ? feedUrl.replace(proxyUrl, '') : feedUrl;
-            rows.push([columnName, cleanUrl]);
+            rows.push([columnName, feedUrl]);
         });
     }
 
@@ -342,17 +337,14 @@ document.getElementById('importFile').addEventListener('change', (event) => {
             const [columnName, feedUrl] = row.split(',');
 
             if (columnName && feedUrl) {
-                const cleanFeedUrl = feedUrl.trim();
-
                 if (!columns[columnName]) {
                     columns[columnName] = [];
                     addColumnToDashboard(columnName, columns[columnName]);
                     addOptionToColumnSelect(columnName);
                 }
 
-                const fullFeedUrl = proxyUrl + cleanFeedUrl;
-                columns[columnName].push(fullFeedUrl);
-                populateColumn(columnName.toLowerCase().replace(/\s+/g, '-'), fullFeedUrl);
+                columns[columnName].push(feedUrl);
+                populateColumn(columnName.toLowerCase().replace(/\s+/g, '-'), feedUrl);
             }
         });
 
