@@ -74,8 +74,9 @@ async function populateColumn(columnId, url) {
     const feedData = await fetchFeed(url);
     if (!feedData) return;
 
-    // Extract the channel title or domain from the feed URL
-    const parser = new URL(url);
+    // Extract the original feed URL's domain as the channel title
+    const originalUrl = url.replace(proxyUrl, ''); // Remove proxy prefix
+    const parser = new URL(originalUrl);
     const channelTitle = parser.hostname.replace('www.', '');
 
     feedData.querySelectorAll('item').forEach((item) => {
