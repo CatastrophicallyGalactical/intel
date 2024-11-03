@@ -1,6 +1,25 @@
 const proxyUrl = 'https://intel-opal.vercel.app/api/cors?url=';
 let columns = JSON.parse(localStorage.getItem('dashboardColumns')) || {};
 
+// Helper function to fetch OpenGraph image
+async function fetchOpenGraphImage(articleUrl) {
+    try {
+        const response = await fetch(proxyUrl + encodeURIComponent(articleUrl));
+        if (!response.ok) throw new Error("Failed to fetch article page for OpenGraph");
+
+        const htmlText = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, "text/html");
+
+        // Find the OpenGraph image tag
+        const ogImage = doc.querySelector('meta[property="og:image"]');
+        return ogImage ? ogImage.getAttribute("content") : null;
+    } catch (error) {
+        console.error("Error fetching OpenGraph image:", error);
+        return null;
+    }
+}
+
 // Function to load the default dashboard from `default.csv` if no saved data is in `localStorage`
 async function loadDefaultDashboard() {
     // Only load the default CSV if columns are empty (first visit)
@@ -79,7 +98,7 @@ async function populateColumn(columnId, url) {
     const parser = new URL(originalUrl);
     const channelTitle = parser.hostname.replace('www.', '');
 
-    feedData.querySelectorAll('item').forEach((item) => {
+    for (const item of feedData.querySelectorAll('item')) {
         const title = item.querySelector('title').textContent || 'No Title';
         const link = item.querySelector('link').textContent || '#';
         
@@ -90,6 +109,9 @@ async function populateColumn(columnId, url) {
         // Extract and format the publication date
         let pubDate = item.querySelector('pubDate');
         pubDate = pubDate ? new Date(pubDate.textContent).toLocaleDateString() : "No date available";
+
+        // Thumbnail placeholder URL
+        const placeholderImageUrl = 'https://via.placeholder.com/50';
 
         // Extract thumbnail image URL if available
         let imageUrl = null;
@@ -102,6 +124,11 @@ async function populateColumn(columnId, url) {
             imageUrl = mediaContent.getAttribute('url');
         }
 
+        // If no image was found in the RSS, fetch OpenGraph image as a fallback
+        if (!imageUrl) {
+            imageUrl = await fetchOpenGraphImage(link) || placeholderImageUrl;
+        }
+
         // Create the article container
         const articleContainer = document.createElement('div');
         articleContainer.classList.add('article-container');
@@ -112,14 +139,12 @@ async function populateColumn(columnId, url) {
         channelElement.classList.add('channel-title');
         articleContainer.appendChild(channelElement);
 
-        // Add thumbnail if available
-        if (imageUrl) {
-            const img = document.createElement('img');
-            img.src = imageUrl;
-            img.alt = title;
-            img.classList.add('thumbnail');
-            articleContainer.appendChild(img);
-        }
+        // Add thumbnail or placeholder
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = title;
+        img.classList.add('thumbnail');
+        articleContainer.appendChild(img);
 
         // Create the article link for the title
         const article = document.createElement('a');
@@ -143,7 +168,7 @@ async function populateColumn(columnId, url) {
 
         // Append the article container to the column's feed content
         feedContent.appendChild(articleContainer);
-    });
+    }
 }
 
 // Function to add a new column without an RSS feed
