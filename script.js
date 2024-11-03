@@ -53,7 +53,7 @@ for (const columnName in columns) {
 // Function to fetch and parse an RSS feed
 async function fetchFeed(url) {
     try {
-        const response = await fetch(url);
+        const response = await fetch(proxyUrl + encodeURIComponent(url));
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
